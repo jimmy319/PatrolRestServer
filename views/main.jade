@@ -22,20 +22,16 @@ block content
 								tr
 									th 
 									th 時間
-									th mac位址
 									th 巡邏點
 									th 簽到者
-									th 簽到者ID
 							tbody
 								for record in recordData
 									tr.data-row(data-id=record._id.toString())
 										td
 											a.btn.btn-warning.del-btn(data-id=record._id.toString(),data-url="/records") 刪除
 										td= record.timestamp
-										td= record.mac
 										td= record.spotName
 										td= record.userName
-										td= record.userId
 								else
 									tr
 										td No Records
@@ -95,18 +91,14 @@ block content
 					thead
 						tr
 							th 時間
-							th mac位址
 							th 巡邏點
 							th 簽到者
-							th 簽到者ID
 					tbody
 						for record in recordData
 							tr
 								td= record.timestamp
-								td= record.mac
 								td= record.spotName
 								td= record.userName
-								td= record.userId
 						else
 							tr
 								td No Records

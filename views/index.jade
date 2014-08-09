@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  #addUser
+    fieldset
+      input#userName(type='text',placeholder='user name')
+      input#userEmail(type='text',placeholder='user email')
+      input#userPwd(type='password',placeholder='password')
+      button#addBtn Add User
+      button#loginBtn Login

@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  #addRecord
+    fieldset
+      input#uid(type='text',placeholder='unique id')
+      input#userId(type='text',placeholder='user id')
+      button#addRecordBtn Add Record

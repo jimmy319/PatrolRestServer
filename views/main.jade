@@ -1,0 +1,168 @@
+extends layout
+
+block content
+	nav.navbar.navbar-default.navbar-fixed-top(role="navigation")
+		div.nav.navbar-nav.navbar-right#right-nav-container
+			button#logoutBtn.btn.btn-info 登出
+	div.main-wrapper#main-page
+		h1.title-text 主控台
+		if isSuper=="1"
+			div.content-wrapper
+				ul.nav.nav-tabs(role="tablist")
+					li.active
+						a(href="#recordManagement",role="tab",data-toggle="tab") 簽到記錄
+					li
+						a(href="#userManagement",role="tab",data-toggle="tab") 使用者管理
+					li
+						a(href="#spotManagement",role="tab",data-toggle="tab") 巡邏點管理
+				div.tab-content					
+					div.tab-pane#recordManagement.active
+						table.table
+							thead
+								tr
+									th 
+									th 時間
+									th mac位址
+									th 巡邏點
+									th 簽到者
+									th 簽到者ID
+							tbody
+								for record in recordData
+									tr.data-row(data-id=record._id.toString())
+										td
+											a.btn.btn-warning.del-btn(data-id=record._id.toString(),data-url="/records") 刪除
+										td= record.timestamp
+										td= record.mac
+										td= record.spotName
+										td= record.userName
+										td= record.userId
+								else
+									tr
+										td No Records
+					div.tab-pane#userManagement
+						button.btn.btn-primary#addUserBtn 新增使用者
+						table.table
+							thead
+								tr
+									th
+									th ID
+									th 名字
+									th email
+									th 密碼
+							tbody
+								for user in userData
+									tr.data-row(data-id=user._id.toString())
+										if user.isSuper!="1"
+											td
+												a.btn.btn-warning.del-btn(data-id=user._id.toString(),data-url="/users") 刪除
+												a.btn.btn-success.edit-btn(data-id=user._id.toString(),data-url="/users") 編輯
+										else
+											td
+										td= user._id
+										td#userName= user.name
+										td#userEmail= user.email
+										td#userPwd= user.pwd
+								else
+									tr
+										td No Records
+
+					div.tab-pane#spotManagement
+						button.btn.btn-primary#addSpotBtn 新增巡邏點
+						table.table
+							thead
+								tr
+									th
+									th ID
+									th 名稱
+									th mac位址
+									th uID
+							tbody
+								for spot in spotData
+									tr.data-row(data-id=spot._id.toString())
+										td
+											a.btn.btn-warning.del-btn(data-id=spot._id.toString(),data-url="/spots") 刪除
+										td= spot._id
+										td= spot.name
+										td= spot.mac
+										td= spot.uid
+								else
+									tr
+										td No Records
+				
+		else
+			div.content-wrapper
+				table.table
+					thead
+						tr
+							th 時間
+							th mac位址
+							th 巡邏點
+							th 簽到者
+							th 簽到者ID
+					tbody
+						for record in recordData
+							tr
+								td= record.timestamp
+								td= record.mac
+								td= record.spotName
+								td= record.userName
+								td= record.userId
+						else
+							tr
+								td No Records
+	div.modal.fade.del-win#delConfirmWin(tabindex="-1",role="dialog",aria-labelledby="delConfirmLabel",aria-hidden="true")
+		div.modal-dialog
+			div.modal-content
+				div.modal-header
+					h4.modal-title#delConfirmLabel 刪除記錄
+				div.modal-body
+					h3 確認您要刪除這筆記錄?
+				div.modal-footer
+					button.btn.btn-default(type="button",data-dismiss="modal") 取消
+					button.btn.btn-primary.btn-confirm(type="button") 確認
+
+	div.modal.fade.insert-user-win#insertUserWin(tabindex="-1",role="dialog",aria-labelledby="winLabel",aria-hidden="true")
+		div.modal-dialog
+			div.modal-content
+				div.modal-header
+					h4.modal-title#winLabel 新增使用者
+				div.modal-body
+					form#addUserForm(role="form")
+						fieldset
+							div.form-group
+								label(for="name") 使用者名稱
+								input#name.form-control(type="text",name="name",placeholder="姓名, 匿稱")
+							div.form-group
+								label(for="email") 信箱(將作為登入帳號)
+								input#email.form-control(type="text",name="email", placeholder="ex: jimmy@gmail.com")
+							div.form-group
+								label(for="pwd") 密碼
+								input#pwd.form-control(type="password",name="pwd", placeholder="密碼")
+							div.checkbox
+								label
+									input#isSuper(type="checkbox")
+									是否為管理者?
+				div.modal-footer
+					button.btn.btn-default(type="button",data-dismiss="modal") 取消
+					button.btn.btn-primary.btn-confirm(type="button",data-url="/users") 確認
+
+	div.modal.fade.insert-spot-win#insertSpotWin(tabindex="-1",role="dialog",aria-labelledby="winLabel",aria-hidden="true")
+		div.modal-dialog
+			div.modal-content
+				div.modal-header
+					h4.modal-title#winLabel 新增巡邏點
+				div.modal-body
+					form#addSpotForm(role="form")
+						fieldset
+							div.form-group
+								label(for="spotName") 巡邏點名稱
+								input#spotName.form-control(type="text",name="name",placeholder="巡邏點名稱")
+							div.form-group
+								label(for="mac") MAC 位址
+								input#spotMac.form-control(type="text",name="mac", placeholder="ex: AA:BB:CC:DD:EE:FF")
+							div.form-group
+								label(for="spotUid") unique ID
+								input#spotUid.form-control(type="text",name="uid", placeholder="major1")
+				div.modal-footer
+					button.btn.btn-default(type="button",data-dismiss="modal") 取消
+					button.btn.btn-primary.btn-confirm(type="button",data-url="/spots") 確認

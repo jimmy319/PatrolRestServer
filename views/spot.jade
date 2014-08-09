@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  #addSpot
+    fieldset
+      input#mac(type='text',placeholder='mac address')
+      input#uid(type='text',placeholder='uid')
+      input#spotName(type='password',placeholder='spot name')
+      button#addSpotBtn Add Spot

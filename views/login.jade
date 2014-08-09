@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	div.main-wrapper
+		div#login-panel.well
+			h1.title-text Login
+			form#login-form(role="form",action="/users/login",method="POST")
+				fieldset
+					div.form-group
+						label(for="account") 帳號:
+						input#account.form-control(type="text",name="email",placeholder="email, ex: jimmy@gmail.com")
+					div.form-group
+						label(for="pwd") 密碼:
+						input#pwd.form-control(type="password",name="pwd",placeholder="password")
+			button#loginBtn.btn.btn-info.btn-lg 登入

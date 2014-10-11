@@ -3,7 +3,7 @@ var router = express.Router();
 
 router.get('/',function(req, res){
 	var db = req.db;
-	db.collection('records').find().toArray(function(err,result){
+	db.collection('records').find({$orderBy:{timestamp:-1}}).toArray(function(err,result){
 		res.json(result);
 	});
 });

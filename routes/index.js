@@ -24,7 +24,7 @@ router.get('/main', function(req, res){
 			var viewData={};
 
 			//fetch records data
-			db.collection('records').find({$orderBy:{timestamp:-1}}).toArray(function(err, records){
+			db.collection('records').find().sort({timestamp:-1}).toArray(function(err, records){
 				viewData.records = records;
 
 				//fetch user data
@@ -39,7 +39,7 @@ router.get('/main', function(req, res){
 				});
 			});
 		}else{
-			db.collection('records').find({userId:req.cookies.uData.uid}).toArray(function(err, items){
+			db.collection('records').find({userId:req.cookies.uData.uid}).sort({timestamp:-1}).toArray(function(err, items){
 				viewData = items;
 				res.render('main',{isSuper:req.cookies.uData.super,recordData: viewData});	
 			});

@@ -24,7 +24,7 @@ router.get('/main', function(req, res){
 			var viewData={};
 
 			//fetch records data
-			db.collection('records').find().toArray(function(err, records){
+			db.collection('records').find({$orderBy:{timestamp:-1}}).toArray(function(err, records){
 				viewData.records = records;
 
 				//fetch user data

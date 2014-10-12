@@ -228,10 +228,7 @@ $(function(){
 			dataType: 'JSON'
 		}).done(function(response){
 			if(response.status==='success'){
-				$('.data-row[data-id="'+id+'"]').remove();
-				$ele.attr('disabled',null);
-				$cancelBtn.attr('disabled',null);
-				$delConfirmWin.modal('hide');
+				location.reload();
 			}else{
 				$ele.attr('disabled',null);
 				$cancelBtn.attr('disabled',null);

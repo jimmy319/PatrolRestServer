@@ -16,7 +16,21 @@ block content
 					li
 						a(href="#spotManagement",role="tab",data-toggle="tab") 巡邏點管理
 				div.tab-content					
-					div.tab-pane#recordManagement.active
+					div.tab-pane#recordManagement.active(ng-app="patrolApp", ng-controller="recordCtrl")
+						div#filter-bar
+							h4 Filter by: 
+							div
+								span 簽到者:
+								select(ng-model="filter.userName")
+									option(value="") 請選擇
+									for user in userData
+										option= user.name
+							div
+								span 巡邏點:
+								select(ng-model="filter.spotName")
+									option(value="") 請選擇
+									for spot in spotData
+										option= spot.name
 						table.table
 							thead
 								tr
@@ -25,16 +39,12 @@ block content
 									th 巡邏點
 									th 簽到者
 							tbody
-								for record in recordData
-									tr.data-row(data-id=record._id.toString())
-										td
-											a.btn.btn-warning.del-btn(data-id=record._id.toString(),data-url="/records") 刪除
-										td= record.timestamp
-										td= record.spotName
-										td= record.userName
-								else
-									tr
-										td No Records
+								tr.data-row(data-id="{{record._id}}", ng-repeat="record in records | filter:filter")
+									td
+										a.btn.btn-warning.del-btn(data-id="{{record._id}}", data-url="/records") 刪除
+									td {{record.timestamp}}
+									td {{record.spotName}}
+									td {{record.userName}} 
 					div.tab-pane#userManagement
 						button.btn.btn-primary#addUserBtn 新增使用者
 						table.table
@@ -158,3 +168,6 @@ block content
 				div.modal-footer
 					button.btn.btn-default(type="button",data-dismiss="modal") 取消
 					button.btn.btn-primary.btn-confirm(type="button",data-url="/spots") 確認
+
+	script(src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js")
+	script(src="/javascripts/main.js")

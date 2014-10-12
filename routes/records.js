@@ -3,7 +3,7 @@ var router = express.Router();
 
 router.get('/',function(req, res){
 	var db = req.db;
-	db.collection('records').find({$orderBy:{timestamp:-1}}).toArray(function(err,result){
+	db.collection('records').find().sort({timestamp:-1}).toArray(function(err,result){
 		res.json(result);
 	});
 });
@@ -31,7 +31,9 @@ router.post('/',function(req, res){
 							
 							//insert data to records collection
 							if(spotData&&spotData.length>0){
-								db.collection('records').insert({timestamp:new Date().toString().replace(/GMT\+.*?\)$/,""),mac:spotData[0].mac,spotName:spotData[0].name,userName:userData.name,userId:userData._id.toString()},function(err,result){
+								var dateObj = new Date();
+								var timestamp = dateObj.getFullYear()+"-"+(dateObj.getMonth()+1)+"-"+dateObj.getDate()+" "+dateObj.getHours()+":"+dateObj.getMinutes()+":"+dateObj.getSeconds();
+								db.collection('records').insert({timestamp:timestamp,mac:spotData[0].mac,spotName:spotData[0].name,userName:userData.name,userId:userData._id.toString()},function(err,result){
 									res.send(
 										(err===null) ? {status:'success'} : {status:'fail'}
 									);
@@ -56,7 +58,6 @@ router.delete('/',function(req,res){
 		res.send({status:'fail',log:'未指定資料ID'});
 	}else{
 		var db = req.db;
-		
 		db.collection('records').removeById(req.body.id,function(err,result){
 			res.send(
 				(err===null) ? {status:'success'} : {status:'fail'}

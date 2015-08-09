@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs');
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -18,6 +19,9 @@ router.get('/main', function(req, res){
 	if(req.cookies.uData){
 		var db = req.db;
 		var viewData = [];
+		var csvBody = 'id,Check-in Time,Card Id,User-Name\n';
+		var recordDataLen;
+		var record;
 
 		//identify user role
 		if(req.cookies.uData.super==1){
@@ -26,6 +30,7 @@ router.get('/main', function(req, res){
 			//fetch records data
 			db.collection('records').find().sort({timestamp:-1}).toArray(function(err, records){
 				viewData.records = records;
+				recordDataLen = viewData.records.length;
 
 				//fetch user data
 				db.collection('user').find().toArray(function(err, users){
@@ -33,8 +38,25 @@ router.get('/main', function(req, res){
 
 					//fetch spot data
 					db.collection('spots').find().toArray(function(err, spots){
-						viewData.spots = spots;
-						res.render('main',{isSuper:req.cookies.uData.super,recordData: viewData.records, userData: viewData.users, spotData: viewData.spots});			
+						// prepare CSV file
+						for (var i = 0; i < recordDataLen; i++) {
+							record = viewData.records[i];
+							for (var key in record) {
+								if (key !== 'userName') {
+									csvBody += record[key] + ',';
+								} else {
+									csvBody += record[key] + '\n';
+								}
+							}
+						}
+						fs.writeFile('public/records.csv', csvBody, {encoding: 'utf8'}, function (err) {
+							if (err) { 
+								console.log('csv file generation error');
+								throw err; 
+							}
+							viewData.spots = spots;
+							res.render('main',{isSuper:req.cookies.uData.super,recordData: viewData.records, userData: viewData.users, spotData: viewData.spots});				
+						});
 					});
 				});
 			});

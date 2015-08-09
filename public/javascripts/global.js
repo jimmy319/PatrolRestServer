@@ -45,8 +45,7 @@ $(function(){
 
 	$("#addRecordBtn").click(function(){
 		var formData = {
-			'uid':$("#uid").val(),
-			'userId':$("#userId").val()
+			'cardId':$("#cardId").val()
 		};
 
 		$.ajax({
@@ -96,7 +95,11 @@ $(function(){
 	});
 
 	$insertUserWin.on("click",".btn-confirm",function(e){
-		var $ele = $(e.target), $cancelBtn = $ele.prev(), url = $ele.attr('data-url'), targetId = $ele.attr('data-target-id'), $table = $("#userManagement tbody");
+		var $ele = $(e.target), 
+			$cancelBtn = $ele.prev(), 
+			url = $ele.attr('data-url'), 
+			targetId = $ele.attr('data-target-id'), 
+			$table = $("#userManagement tbody");
 
 		//disable buttons while AJAX request is in process
 		$ele.attr('disabled','disabled');
@@ -106,6 +109,7 @@ $(function(){
 			name: $("#name",$insertUserWin).val(),
 			email: $("#email",$insertUserWin).val(),
 			pwd: $("#pwd",$insertUserWin).val(),
+			cardId: $("#cardId", $insertUserWin).val(),
 			isSuper: $("#isSuper",$insertUserWin).prop('checked')?1:0
 		};
 		var action = "POST";
@@ -125,9 +129,9 @@ $(function(){
 				var userData = response.userInfo;
 				var btnTemp = userData.isSuper==="1"?'':'<a class="btn btn-warning del-btn" data-id="'+userData._id+'" data-url="/users">刪除</a><a class="btn btn-success edit-btn" data-id="'+userData._id+'" data-url="/users">編輯</a>';
 				if(action==="POST"){
-					$table.append('<tr class="data-row" data-id="'+userData._id+'"><td>'+btnTemp+'</td><td>'+userData._id+'</td><td id="userName">'+userData.name+'</td><td id="userEmail">'+userData.email+'</td><td id="userPwd">'+userData.pwd+'</td></tr>');	
+					$table.append('<tr class="data-row" data-id="'+userData._id+'"><td>'+btnTemp+'</td><td>'+userData._id+'</td><td id="userName">'+userData.name+'</td><td id="userEmail">'+userData.email+'</td><td id="userPwd">'+userData.pwd+'</td><td id="userCardId">'+userData.cardId+'</td></tr>');	
 				}else if(action==="PUT"){
-					$('.data-row[data-id="'+userData._id+'"]').replaceWith('<tr class="data-row" data-id="'+userData._id+'"><td>'+btnTemp+'</td><td>'+userData._id+'</td><td id="userName">'+userData.name+'</td><td id="userEmail">'+userData.email+'</td><td id="userPwd">'+userData.pwd+'</td></tr>');
+					$('.data-row[data-id="'+userData._id+'"]').replaceWith('<tr class="data-row" data-id="'+userData._id+'"><td>'+btnTemp+'</td><td>'+userData._id+'</td><td id="userName">'+userData.name+'</td><td id="userEmail">'+userData.email+'</td><td id="userPwd">'+userData.pwd+'</td><td id="userCardId">'+userData.cardId+'</td></tr>');
 				}			
 				$ele.attr('disabled',null);
 				$cancelBtn.attr('disabled',null);
@@ -144,51 +148,51 @@ $(function(){
 		});
 	});
 
-	$insertSpotWin.on("click",".btn-confirm",function(e){
-		var $ele = $(e.target), $cancelBtn = $ele.prev(), url = $ele.attr('data-url'), targetId = $ele.attr('data-target-id'), $table = $("#spotManagement tbody");
+	// $insertSpotWin.on("click",".btn-confirm",function(e){
+	// 	var $ele = $(e.target), $cancelBtn = $ele.prev(), url = $ele.attr('data-url'), targetId = $ele.attr('data-target-id'), $table = $("#spotManagement tbody");
 
-		//disable buttons while AJAX request is in process
-		$ele.attr('disabled','disabled');
-		$cancelBtn.attr('disabled','disabled');
+	// 	//disable buttons while AJAX request is in process
+	// 	$ele.attr('disabled','disabled');
+	// 	$cancelBtn.attr('disabled','disabled');
 
-		var formData = {
-			name: $("#spotName",$insertSpotWin).val(),
-			mac: $("#spotMac",$insertSpotWin).val(),
-			uid: $("#spotUid",$insertSpotWin).val()
-		};
-		var action = "POST";
+	// 	var formData = {
+	// 		name: $("#spotName",$insertSpotWin).val(),
+	// 		mac: $("#spotMac",$insertSpotWin).val(),
+	// 		uid: $("#spotUid",$insertSpotWin).val()
+	// 	};
+	// 	var action = "POST";
 
-		if(targetId){
-			formData.id = targetId;
-			action = "PUT";
-		} 
+	// 	if(targetId){
+	// 		formData.id = targetId;
+	// 		action = "PUT";
+	// 	} 
 
-		$.ajax({
-			url: url,
-			data: formData,
-			type: action,
-			dataType: 'JSON'
-		}).done(function(response){
-			if(response.status==='success'){
-				var spotData = response.spotInfo;
-				if(action==="POST"){
-					var btnTemp = '<a class="btn btn-warning del-btn" data-id="'+spotData._id+'" data-url="/spots">刪除</a>';
-					$table.append('<tr class="data-row" data-id="'+spotData._id+'"><td>'+btnTemp+'</td><td>'+spotData._id+'</td><td>'+spotData.name+'</td><td>'+spotData.mac+'</td><td>'+spotData.uid+'</td></tr>');	
-				}			
-				$ele.attr('disabled',null);
-				$cancelBtn.attr('disabled',null);
-				$insertSpotWin.modal('hide');
-			}else if(response.status==='duplicated mac address'){
-				$ele.attr('disabled',null);
-				$cancelBtn.attr('disabled',null);
-				alert('該巡邏點已被註冊!');
-			}else{
-				$ele.attr('disabled',null);
-				$cancelBtn.attr('disabled',null);
-				alert('新增失敗!');
-			}
-		});
-	});
+	// 	$.ajax({
+	// 		url: url,
+	// 		data: formData,
+	// 		type: action,
+	// 		dataType: 'JSON'
+	// 	}).done(function(response){
+	// 		if(response.status==='success'){
+	// 			var spotData = response.spotInfo;
+	// 			if(action==="POST"){
+	// 				var btnTemp = '<a class="btn btn-warning del-btn" data-id="'+spotData._id+'" data-url="/spots">刪除</a>';
+	// 				$table.append('<tr class="data-row" data-id="'+spotData._id+'"><td>'+btnTemp+'</td><td>'+spotData._id+'</td><td>'+spotData.name+'</td><td>'+spotData.mac+'</td><td>'+spotData.uid+'</td></tr>');	
+	// 			}			
+	// 			$ele.attr('disabled',null);
+	// 			$cancelBtn.attr('disabled',null);
+	// 			$insertSpotWin.modal('hide');
+	// 		}else if(response.status==='duplicated mac address'){
+	// 			$ele.attr('disabled',null);
+	// 			$cancelBtn.attr('disabled',null);
+	// 			alert('該巡邏點已被註冊!');
+	// 		}else{
+	// 			$ele.attr('disabled',null);
+	// 			$cancelBtn.attr('disabled',null);
+	// 			alert('新增失敗!');
+	// 		}
+	// 	});
+	// });
 	
 	/*======Update data======*/
 
@@ -198,6 +202,7 @@ $(function(){
 		$('#name',$insertUserWin).val($('#userName',$dataRow).text());
 		$('#email',$insertUserWin).val($('#userEmail',$dataRow).text())[0].disabled="disabled";
 		$('#pwd',$insertUserWin).val($('#userPwd',$dataRow).text());
+		$('#cardId',$insertUserWin).val($('#userCardId',$dataRow).text());
 
 		//update dialog title
 		$('#winLabel',$insertUserWin).text("編輯使用者");

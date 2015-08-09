@@ -8,5 +8,12 @@ angular.module("patrolApp",[])
 		}else{
 			alert("server error");
 		}
-	});	
+	});
+
+	$scope.predicate = 'timestamp';
+	$scope.reverse = true;
+	$scope.order = function(predicate) {
+		$scope.reverse = ($scope.predicate === predicate) ? !$scope.reverse : false;
+		$scope.predicate = predicate;
+	};
 });

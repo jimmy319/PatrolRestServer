@@ -12,7 +12,7 @@ router.get('/', function(req, res){
 /**Create new user*/
 router.post('/', function(req, res){
 
-	if(!req.body.name||!req.body.email||!req.body.pwd||!req.body.isSuper){
+	if(!req.body.name||!req.body.email||!req.body.pwd||!req.body.cardId||!req.body.isSuper){
 		res.send({status:"fail",log:"輸入資料不完整"});
 	}else{
 		var db = req.db;
@@ -53,7 +53,7 @@ router.delete('/', function(req, res){
 });
 
 router.put('/', function(req, res){
-	if(!req.body.id||!req.body.name||!req.body.pwd||!req.body.email||!req.body.isSuper){
+	if(!req.body.id||!req.body.name||!req.body.pwd||!req.body.email||!req.body.cardId||!req.body.isSuper){
 		res.send({status:"fail",log:"輸入資料不完整"});
 	}else{
 		var db = req.db;

@@ -59,3 +59,32 @@ nav{
 #filter-bar select{
 	margin-left: 5px;
 }
+.tab-content {
+	margin-top: 20px;
+}
+.sortable {
+	cursor: pointer;
+}
+.sortable:hover {
+	text-decoration: none;
+}
+.sorting.order-desc:after {
+	content: "";
+	display: inline-block;
+	border-top: 10px solid #ccc;
+	border-left: 10px solid #fff;
+	border-right: 10px solid #fff;
+	vertical-align: middle;
+}
+.sorting.order-asc:after {
+	content: "";
+	display: inline-block;
+	border-bottom: 10px solid #ccc;
+	border-left: 10px solid #fff;
+	border-right: 10px solid #fff;
+	vertical-align: middle;
+}
+.csv-btn {
+	float: right;
+	margin-bottom: 15px;
+}

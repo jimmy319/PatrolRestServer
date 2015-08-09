@@ -13,37 +13,24 @@ block content
 						a(href="#recordManagement",role="tab",data-toggle="tab") 簽到記錄
 					li
 						a(href="#userManagement",role="tab",data-toggle="tab") 使用者管理
-					li
-						a(href="#spotManagement",role="tab",data-toggle="tab") 巡邏點管理
 				div.tab-content					
 					div.tab-pane#recordManagement.active(ng-app="patrolApp", ng-controller="recordCtrl")
-						div#filter-bar
-							h4 Filter by: 
-							div
-								span 簽到者:
-								select(ng-model="filter.userName")
-									option(value="") 請選擇
-									for user in userData
-										option= user.name
-							div
-								span 巡邏點:
-								select(ng-model="filter.spotName")
-									option(value="") 請選擇
-									for spot in spotData
-										option= spot.name
+						<a href="records.csv" class="btn btn-success csv-btn">下載 CSV File</a>
 						table.table
 							thead
 								tr
 									th 
-									th 時間
-									th 巡邏點
+									th 
+										a.sortable.order-desc(ng-click="order('timestamp')", ng-class="{'order-desc':reverse, 'order-asc': !reverse, 'sorting': predicate === 'timestamp'}") 時間
+									th 
+										a.sortable(ng-click="order('cardId')", ng-class="{'order-desc':reverse, 'order-asc': !reverse, 'sorting': predicate === 'cardId'}") 卡號
 									th 簽到者
 							tbody
-								tr.data-row(data-id="{{record._id}}", ng-repeat="record in records | filter:filter")
+								tr.data-row(data-id="{{record._id}}", ng-repeat="record in records | orderBy:predicate:reverse")
 									td
 										a.btn.btn-warning.del-btn(data-id="{{record._id}}", data-url="/records") 刪除
 									td {{record.timestamp}}
-									td {{record.spotName}}
+									td {{record.cardId}}
 									td {{record.userName}} 
 					div.tab-pane#userManagement
 						button.btn.btn-primary#addUserBtn 新增使用者
@@ -55,6 +42,7 @@ block content
 									th 名字
 									th email
 									th 密碼
+									th 卡號
 							tbody
 								for user in userData
 									tr.data-row(data-id=user._id.toString())
@@ -68,29 +56,7 @@ block content
 										td#userName= user.name
 										td#userEmail= user.email
 										td#userPwd= user.pwd
-								else
-									tr
-										td No Records
-
-					div.tab-pane#spotManagement
-						button.btn.btn-primary#addSpotBtn 新增巡邏點
-						table.table
-							thead
-								tr
-									th
-									th ID
-									th 名稱
-									th mac位址
-									th uID
-							tbody
-								for spot in spotData
-									tr.data-row(data-id=spot._id.toString())
-										td
-											a.btn.btn-warning.del-btn(data-id=spot._id.toString(),data-url="/spots") 刪除
-										td= spot._id
-										td= spot.name
-										td= spot.mac
-										td= spot.uid
+										td#userCardId= user.cardId
 								else
 									tr
 										td No Records
@@ -107,7 +73,7 @@ block content
 						for record in recordData
 							tr
 								td= record.timestamp
-								td= record.spotName
+								td= record.cardId
 								td= record.userName
 						else
 							tr
@@ -140,6 +106,9 @@ block content
 							div.form-group
 								label(for="pwd") 密碼
 								input#pwd.form-control(type="password",name="pwd", placeholder="密碼")
+							div.form-group
+								label(for="cardId") 卡號 (8 碼)
+								input#cardId.form-control(type="text",name="cardId", placeholder="ex: 83809711")
 							div.checkbox
 								label
 									input#isSuper(type="checkbox")

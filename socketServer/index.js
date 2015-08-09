@@ -8,6 +8,7 @@ Array.prototype.remove = function(from, to) {
 
 var net = require('net');
 var http = require('http');
+var fs = require('fs');
 var queryString = require('querystring');
 var sockets = [];
 var parseInput = function (input) {
@@ -39,6 +40,15 @@ var doApiCall = function (endpoint, data) {
 
 	req.write(postData);
 	req.end();
+};
+var writeLog = function (input, callback) {
+	fs.appendFile('log.txt', input, function (err) {
+		if (err) { 
+			console.log('write log file failed'); 
+			throw err; 
+		}
+		callback();
+	});
 }
 
 net.createServer(function (socket) {
@@ -51,12 +61,14 @@ net.createServer(function (socket) {
 		for (i = 0; i < sockets.length; i++) {
 			if (sockets[i] === socket) {
 				console.log('received socket data....' + data.toString());
-				parsedResult = parseInput(data.toString());
+				writeLog(data.toString(), function () {
+					parsedResult = parseInput(data.toString());
 				
-				if (parsedResult) {
-					cardId = parsedResult[1];
-					doApiCall('/records', {cardId: cardId});
-				}
+					if (parsedResult) {
+						cardId = parsedResult[1];
+						doApiCall('/records', {cardId: cardId});
+					}	
+				});
 			}
 		}
 	});

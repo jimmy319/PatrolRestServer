@@ -26,8 +26,9 @@ router.post('/', function (req, res) {
 				if (userData) {
 					//insert data to records collection
 					var dateObj = new Date();
+					var tsValue = dateObj.getTime();
 					var timestamp = dateObj.getFullYear()+"-"+(dateObj.getMonth()+1)+"-"+dateObj.getDate()+" "+(dateObj.getHours()<10?"0"+dateObj.getHours():dateObj.getHours())+":"+(dateObj.getMinutes()<10?"0"+dateObj.getMinutes():dateObj.getMinutes())+":"+(dateObj.getSeconds()<10?"0"+dateObj.getSeconds():dateObj.getSeconds());
-					db.collection('records').insert({timestamp:timestamp,cardId:userData.cardId,userName:userData.name},function(err,result){
+					db.collection('records').insert({timestamp:timestamp,tsValue:tsValue,cardId:userData.cardId,userName:userData.name},function(err,result){
 						res.send(
 							(err===null) ? {status:'success'} : {status:'fail'}
 						);

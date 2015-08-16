@@ -77,4 +77,7 @@ net.createServer(function (socket) {
         sockets.remove(i);
         console.log('byebye');
     });
+    socket.on('error', function(err) {
+    	console.log(err);
+    });
 }).listen(55056);
